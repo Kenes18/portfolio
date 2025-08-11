@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Items{% endblock %}
+
+{% block content %}
+    <div class="pb-6 grid grid-cols-4 gap-4">
+        <div class="col-span-1">
+            <form method="get" action="{% url 'item:items' %}">
+                <input name="query" class="w-full py-4 px-6 border rounded-xl" type="text" value="{{ query }}" placeholder="Найти инструмент...">
+                <button class="mt-2 py-3 px-6 text-lg bg-teal-500 text-white rounded-xl">Поиск</button>
+            </form>
+
+            <hr class="my-6">
+
+            <p class="font-semibold">Категории</p>
+
+            <ul>
+                {% for category in categories %}
+                    <li class="py-2 px-2 rounded-xl{% if category.id == category_id %} {% endif %}">
+                        <a href="{% url 'item:items' %}?query={{ query }}&category={{ category.id }}">{{ category.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <hr class="my-6">
+
+            <p class="font-semibold">Отчистить фильтры</p>
+
+            <ul>
+                <li><a href="{% url 'item:items' %}" class="mt-2 py-3 px-6 inline-block bg-yellow-500 text-lg rounded-xl text-white">Отчистить</a>
+        </div>
+
+<div class="col-span-3">
+    <div class="grid grid-cols-3 gap-6">
+        {% for item in page_obj %}
+            <div class="relative overflow-hidden rounded-xl shadow-md">
+                <a href="{% url 'item:detail' item.id %}" class="block">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-64 object-cover rounded-t-xl">
+                    <div class="p-4 bg-white rounded-b-xl">
+                        <h2 class="text-xl font-semibold mb-2">{{ item.name }}</h2>
+                        <p class="text-gray-700">В наличии: {{ item.in_stock }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+    </div>
+<div class="flex justify-center items-center">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center justify-center px-5 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">previous</a>
+        {% endif %}
+        
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="flex items-center justify-center px-5 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">next</a>
+        {% endif %}
+    
+</div>
+<br>
+<span class="font-semibold text-gray-900 justify-center flex">
+    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+</span>
+{% endblock %}

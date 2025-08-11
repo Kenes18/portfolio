@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %} {% block title %}Выйти{% endblock %} 
+{% block content %}
+<style>
+    .container {
+        display: flex;
+        justify-content: space-around;
+    }
+</style>
+<div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl container">
+  {% if user.is_authenticated %}
+  <form method="post" action="">
+    {% csrf_token %}
+    <button
+      class="py-3 px-8 text-lg bg-red-500 hover:bg-red-500 rounded-xl text-white"
+    >
+      Выйти
+    </button>
+    <a href="/" class="py-3 px-8 text-lg bg-teal-500 rounded-xl text-white">Отмена</a>
+  </form>
+
+  {% else %}
+  <p>Вы не авторизованы.</p>
+  {% endif %}
+</div>
+{% endblock %}

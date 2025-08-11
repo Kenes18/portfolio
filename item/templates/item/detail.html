@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ item.name }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-5 gap-6">
+    <div class="col-span-3">
+        <img src="{{ item.image.url }}" class="rounded-xl">
+    </div>
+
+    <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
+        <h1 class="mb-6 text-3xl">{{ item.name }}</h1>
+        <p class="text-gray-500"><strong>В наличии: </strong>{{ item.in_stock }}</p>
+       
+        {% if item.description %}
+            <p class="text-gray-700">
+                <strong class="text-gray-500">Описание:</strong><br>
+                {{ item.description }}
+            </p>
+        {% endif %}
+
+        {% if request.user == item.created_by %}
+            <div class="mt-6 p-6 bg-white rounded-xl">
+              
+
+                <a href="{% url 'item:edit' item.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl">Редактировать</a>
+                <a href="{% url 'item:delete' item.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl">Удалить</a>
+            </div>
+        {% else %}  
+            <a href="{% url 'conversation:new' item.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Связаться с продавцом</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+    <h2 class="mb-12 text-2xl text-center">Похожие инструменты</h2>
+
+    <div class="grid grid-cols-3 gap-6">
+        {% for item in related_items %}
+            <div class="relative overflow-hidden rounded-xl shadow-md">
+                <a href="{% url 'item:detail' item.id %}" class="block">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-64 object-cover rounded-t-xl">
+                    <div class="p-4 bg-white rounded-b-xl">
+                        <h2 class="text-xl font-semibold mb-2">{{ item.name }}</h2>
+                        <p class="text-gray-700">В наличии: {{ item.in_stock }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
